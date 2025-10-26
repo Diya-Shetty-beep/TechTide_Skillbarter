@@ -1,0 +1,2328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBarter - Exchange Skills, Not Money</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4bb543;
+            --warning: #ffcc00;
+            --danger: #dc3545;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        
+        nav a:hover {
+            opacity: 0.8;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+            background: linear-gradient(rgba(67, 97, 238, 0.9), rgba(63, 55, 201, 0.9)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%234361ee"/><path d="M0 0L100 100M100 0L0 100" stroke="%233f37c9" stroke-width="2"/></svg>');
+            background-size: cover;
+            color: white;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        /* Main Content */
+        main {
+            padding: 3rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--secondary);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .file-upload {
+            border: 2px dashed var(--light-gray);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--primary);
+        }
+        
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .skill-tag {
+            background-color: var(--light-gray);
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .skill-tag i {
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .verified-badge {
+            color: var(--success);
+            margin-left: 5px;
+        }
+        
+        /* Dashboard */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+        
+        .profile-card {
+            text-align: center;
+        }
+        
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+            border: 5px solid var(--light);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 1rem 0;
+        }
+        
+        .badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--warning);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .points {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .matches-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .match-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .match-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .match-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+        }
+        
+        .match-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        
+        .match-skill {
+            background-color: var(--light);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        /* Communication Choice */
+        .communication-choice {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .choice-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .choice-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 200px;
+        }
+        
+        .choice-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .choice-btn i {
+            font-size: 3rem;
+            color: var(--primary);
+        }
+        
+        /* Chat Section */
+        .chat-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+            height: 500px;
+        }
+        
+        .contacts-list {
+            background: white;
+            border-radius: 8px;
+            overflow-y: auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contact {
+            padding: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .contact.active {
+            background-color: var(--light);
+        }
+        
+        .contact-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .chat-area {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            padding: 1rem;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .message {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            position: relative;
+        }
+        
+        .message.sent {
+            align-self: flex-end;
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .message.received {
+            align-self: flex-start;
+            background-color: var(--light-gray);
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            background-color: var(--light-gray);
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 70%;
+        }
+        
+        .typing-dots {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .typing-dots span {
+            height: 8px;
+            width: 8px;
+            border-radius: 50%;
+            background-color: var(--gray);
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dots span:nth-child(1) { animation-delay: 0s; }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .chat-input input {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        /* Video Conference */
+        .video-conference-section {
+            margin-bottom: 2rem;
+        }
+        
+        .video-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            height: 500px;
+            margin-bottom: 1rem;
+        }
+        
+        .video-box {
+            background: var(--dark);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-element {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .video-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .video-label {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .control-btn.active {
+            background: white;
+            color: var(--primary);
+        }
+        
+        .control-btn.danger {
+            background: var(--danger);
+        }
+        
+        .control-btn.danger:hover {
+            background: #c82333;
+        }
+        
+        .screen-share-btn {
+            background: var(--success);
+        }
+        
+        .screen-share-btn:hover {
+            background: #3d8b40;
+        }
+        
+        .session-tools {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .tool-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            flex: 1;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tool-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+        
+        /* eSamuday Verification */
+        .verification-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f0f8ff;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .verification-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .verification-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-verified {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .status-pending {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .status-unverified {
+            background-color: var(--light-gray);
+            color: var(--gray);
+        }
+        
+        /* Feedback Form */
+        .rating {
+            display: flex;
+            gap: 5px;
+            margin: 1rem 0;
+        }
+        
+        .star {
+            font-size: 1.5rem;
+            color: var(--light-gray);
+            cursor: pointer;
+        }
+        
+        .star.active {
+            color: var(--warning);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* User Badge Levels */
+        .badge-levels {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 8px;
+        }
+        
+        .level {
+            text-align: center;
+            flex: 1;
+            padding: 0.5rem;
+        }
+        
+        .level.active {
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+        }
+        
+        .level-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .level-points {
+            font-size: 0.8rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .choice-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .video-container {
+                grid-template-columns: 1fr;
+                height: 400px;
+            }
+            
+            .session-tools {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .chat-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+        
+        /* Hidden sections */
+        .section {
+            display: none;
+        }
+        
+        .active-section {
+            display: block;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-exchange-alt"></i>
+                <span>SkillBarter</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link" data-section="home">Home</a></li>
+                    <li><a href="#" class="nav-link" data-section="how-it-works">How It Works</a></li>
+                    <li><a href="#" class="nav-link" data-section="dashboard">Dashboard</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button class="btn btn-outline" id="loginBtn">Login</button>
+                <button class="btn btn-primary" id="signupBtn">Sign Up</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Exchange Skills, Not Money</h1>
+            <p>Connect with people who have the skills you want to learn, and teach them what you know. No money involved, just knowledge sharing.</p>
+            <button class="btn btn-primary" id="getStartedBtn">Get Started</button>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Home Section -->
+        <section id="home" class="section active-section">
+            <h2 class="section-title">Popular Skill Exchanges</h2>
+            <div class="matches-container">
+                <div class="match-card">
+                    <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="User" class="match-img">
+                    <h3>Sarah Johnson</h3>
+                    <p>Teaches: Graphic Design</p>
+                    <p>Wants to learn: Web Development</p>
+                    <div class="match-skills">
+                        <span class="match-skill">Photoshop <i class="fas fa-check-circle verified-badge"></i></span>
+                        <span class="match-skill">Illustrator <i class="fas fa-check-circle verified-badge"></i></span>
+                        <span class="match-skill">UI/UX</span>
+                    </div>
+                    <button class="btn btn-primary connect-btn" data-user="sarah">Connect</button>
+                </div>
+                <div class="match-card">
+                    <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="User" class="match-img">
+                    <h3>Michael Chen</h3>
+                    <p>Teaches: Web Development</p>
+                    <p>Wants to learn: Digital Marketing</p>
+                    <div class="match-skills">
+                        <span class="match-skill">JavaScript <i class="fas fa-check-circle verified-badge"></i></span>
+                        <span class="match-skill">React</span>
+                        <span class="match-skill">Node.js</span>
+                    </div>
+                    <button class="btn btn-primary connect-btn" data-user="michael">Connect</button>
+                </div>
+                <div class="match-card">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User" class="match-img">
+                    <h3>Emma Rodriguez</h3>
+                    <p>Teaches: Digital Marketing</p>
+                    <p>Wants to learn: Photography</p>
+                    <div class="match-skills">
+                        <span class="match-skill">SEO <i class="fas fa-check-circle verified-badge"></i></span>
+                        <span class="match-skill">Social Media</span>
+                        <span class="match-skill">Analytics</span>
+                    </div>
+                    <button class="btn btn-primary connect-btn" data-user="emma">Connect</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="section">
+            <h2 class="section-title">How SkillBarter Works</h2>
+            <div class="card">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h3>1. Create Your Profile</h3>
+                        <p>Upload your resume, list your skills, and verify them with eSamuday API.</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>2. AI Matching</h3>
+                        <p>Our AI finds perfect skill exchange partners based on your profile.</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>3. Connect & Learn</h3>
+                        <p>Chat with your matches and schedule skill exchange sessions.</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h3>4. Give Feedback</h3>
+                        <p>Rate your sessions to improve the community and earn badges.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- eSamuday Integration Info -->
+            <div class="verification-section">
+                <h3><i class="fas fa-shield-alt"></i> eSamuday Skill Verification</h3>
+                <p>SkillBarter partners with eSamuday API to verify and certify your skills. Get your skills officially recognized by the Government of India's skill verification system.</p>
+                <div class="verification-status">
+                    <span class="status-badge status-verified">Verified Skills</span>
+                    <span>Skills with <i class="fas fa-check-circle verified-badge"></i> are officially verified</span>
+                </div>
+                <button class="btn btn-primary" id="verifySkillsBtn">Verify My Skills</button>
+            </div>
+        </section>
+
+        <!-- Registration Section -->
+        <section id="registration" class="section">
+            <h2 class="section-title">Create Your SkillBarter Account</h2>
+            <div class="card">
+                <form id="registrationForm">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="aadhaar">Aadhaar Number (for eSamuday verification)</label>
+                        <input type="text" id="aadhaar" placeholder="Enter 12-digit Aadhaar number">
+                    </div>
+                    <div class="form-group">
+                        <label>Upload Resume (PDF)</label>
+                        <div class="file-upload" id="resumeUpload">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; margin-bottom: 1rem; color: var(--gray);"></i>
+                            <p>Click to upload your resume or drag and drop</p>
+                            <p style="font-size: 0.8rem; color: var(--gray);">PDF files only, max 5MB</p>
+                        </div>
+                        <input type="file" id="resume" accept=".pdf" style="display: none;">
+                    </div>
+                    <div class="form-group">
+                        <label for="skills">Your Skills (comma separated)</label>
+                        <input type="text" id="skills" placeholder="e.g., Graphic Design, JavaScript, Photography">
+                        <div class="skills-container" id="skillsContainer"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="learnSkills">Skills You Want to Learn (comma separated)</label>
+                        <input type="text" id="learnSkills" placeholder="e.g., Web Development, Digital Marketing, Cooking">
+                        <div class="skills-container" id="learnSkillsContainer"></div>
+                    </div>
+                    
+                    <!-- eSamuday Verification Section -->
+                    <div class="verification-section">
+                        <h3><i class="fas fa-shield-alt"></i> eSamuday Skill Verification</h3>
+                        <p>Verify your skills with the Government of India's eSamuday API to increase your credibility and get better matches.</p>
+                        <div class="verification-status">
+                            <span class="status-badge status-unverified">Not Verified</span>
+                            <span>Your skills will be verified after registration</span>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="consentCheckbox">
+                                I consent to SkillBarter verifying my skills through eSamuday API
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section">
+            <h2 class="section-title">Your SkillBarter Dashboard</h2>
+            <div class="dashboard">
+                <div class="card profile-card">
+                    <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Profile" class="profile-img">
+                    <h3>John Doe</h3>
+                    <p>Graphic Designer & Web Developer</p>
+                    <div class="points">850 Points</div>
+                    
+                    <!-- Badge Levels -->
+                    <div class="badge-levels">
+                        <div class="level">
+                            <div class="level-name">Beginner</div>
+                            <div class="level-points">0-100 pts</div>
+                        </div>
+                        <div class="level">
+                            <div class="level-name">Explorer</div>
+                            <div class="level-points">101-300 pts</div>
+                        </div>
+                        <div class="level">
+                            <div class="level-name">Specialist</div>
+                            <div class="level-points">301-600 pts</div>
+                        </div>
+                        <div class="level active">
+                            <div class="level-name">Expert</div>
+                            <div class="level-points">601-1000 pts</div>
+                        </div>
+                        <div class="level">
+                            <div class="level-name">Champion</div>
+                            <div class="level-points">1001-1500 pts</div>
+                        </div>
+                        <div class="level">
+                            <div class="level-name">Innovator</div>
+                            <div class="level-points">1501-2500 pts</div>
+                        </div>
+                        <div class="level">
+                            <div class="level-name">Grandmaster</div>
+                            <div class="level-points">2500+ pts</div>
+                        </div>
+                    </div>
+                    
+                    <div class="badges">
+                        <div class="badge"><i class="fas fa-star"></i></div>
+                        <div class="badge"><i class="fas fa-medal"></i></div>
+                        <div class="badge"><i class="fas fa-trophy"></i></div>
+                    </div>
+                    
+                    <!-- Skill Verification Status -->
+                    <div class="verification-section" style="margin-top: 1rem;">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Skill Verification</h4>
+                        <div class="verification-status">
+                            <span class="status-badge status-verified">Verified</span>
+                            <span>3 skills verified via eSamuday</span>
+                        </div>
+                        <button class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">Verify More Skills</button>
+                    </div>
+                    
+                    <div style="margin-top: 1rem;">
+                        <h4>Your Skills</h4>
+                        <div class="skills-container" style="justify-content: center;">
+                            <span class="skill-tag">Graphic Design <i class="fas fa-check-circle verified-badge"></i></span>
+                            <span class="skill-tag">UI/UX <i class="fas fa-check-circle verified-badge"></i></span>
+                            <span class="skill-tag">JavaScript <i class="fas fa-check-circle verified-badge"></i></span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <h4>Skills to Learn</h4>
+                        <div class="skills-container" style="justify-content: center;">
+                            <span class="skill-tag">Digital Marketing</span>
+                            <span class="skill-tag">Photography</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card">
+                        <h3>Your Matches</h3>
+                        <div class="matches-container">
+                            <div class="match-card">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="match-img">
+                                <h3>Lisa Wang</h3>
+                                <p>Teaches: Digital Marketing</p>
+                                <p>Wants to learn: Graphic Design</p>
+                                <div class="match-skills">
+                                    <span class="match-skill">SEO <i class="fas fa-check-circle verified-badge"></i></span>
+                                    <span class="match-skill">Social Media <i class="fas fa-check-circle verified-badge"></i></span>
+                                </div>
+                                <button class="btn btn-primary connect-btn" data-user="lisa">Start Chat</button>
+                            </div>
+                            <div class="match-card">
+                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User" class="match-img">
+                                <h3>David Kim</h3>
+                                <p>Teaches: Photography</p>
+                                <p>Wants to learn: UI/UX Design</p>
+                                <div class="match-skills">
+                                    <span class="match-skill">Portrait <i class="fas fa-check-circle verified-badge"></i></span>
+                                    <span class="match-skill">Landscape</span>
+                                </div>
+                                <button class="btn btn-primary connect-btn" data-user="david">Start Chat</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Recent Sessions</h3>
+                        <div style="display: grid; gap: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--light); border-radius: 8px;">
+                                <div>
+                                    <h4>Graphic Design Session</h4>
+                                    <p>With Lisa Wang • May 15, 2023</p>
+                                </div>
+                                <div>
+                                    <span style="color: var(--warning);">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--light); border-radius: 8px;">
+                                <div>
+                                    <h4>Digital Marketing Session</h4>
+                                    <p>With Lisa Wang • May 10, 2023</p>
+                                </div>
+                                <div>
+                                    <span style="color: var(--warning);">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Communication Choice Section -->
+        <section id="communication-choice" class="section">
+            <div class="card communication-choice">
+                <h2>How would you like to connect with <span id="partner-name">Lisa Wang</span>?</h2>
+                <p>Choose your preferred communication method to start your skill exchange session</p>
+                
+                <div class="choice-buttons">
+                    <div class="choice-btn" id="chat-choice">
+                        <i class="fas fa-comments"></i>
+                        <h3>Chat</h3>
+                        <p>Send messages and share files</p>
+                    </div>
+                    <div class="choice-btn" id="video-choice">
+                        <i class="fas fa-video"></i>
+                        <h3>Video Call</h3>
+                        <p>Face-to-face conversation</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <button class="btn btn-outline" id="back-to-matches">Back to Matches</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat Section -->
+        <section id="chat" class="section">
+            <div class="chat-container">
+                <div class="contacts-list">
+                    <div class="contact active">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="contact-img">
+                        <div>
+                            <h4>Lisa Wang</h4>
+                            <p>Digital Marketing Expert</p>
+                        </div>
+                    </div>
+                    <div class="contact">
+                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User" class="contact-img">
+                        <div>
+                            <h4>David Kim</h4>
+                            <p>Photography Specialist</p>
+                        </div>
+                    </div>
+                    <div class="contact">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User" class="contact-img">
+                        <div>
+                            <h4>Emma Rodriguez</h4>
+                            <p>Digital Marketing Pro</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-area">
+                    <div class="chat-header">
+                        <div>
+                            <h3 id="chat-partner-name">Lisa Wang</h3>
+                            <p>Online</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary" id="switch-to-video">
+                                <i class="fas fa-video"></i> Switch to Video
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chat-messages" id="chat-messages">
+                        <!-- Messages will be dynamically added here -->
+                    </div>
+                    <div class="typing-indicator" id="typing-indicator">
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="message-input" placeholder="Type your message...">
+                        <button class="btn btn-primary" id="send-message"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Conference Section -->
+        <section id="video-conference" class="section video-conference-section">
+            <h2 class="section-title">Skill Exchange Session with <span id="video-partner-name">Lisa Wang</span></h2>
+            
+            <div class="video-container">
+                <!-- Local Video -->
+                <div class="video-box">
+                    <video id="local-video" class="video-element" autoplay muted></video>
+                    <div class="video-placeholder" id="local-placeholder">
+                        <i class="fas fa-user"></i>
+                        <span>You</span>
+                    </div>
+                    <div class="video-label">You</div>
+                    <div class="video-controls">
+                        <button class="control-btn" id="mute-btn">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button class="control-btn" id="video-btn">
+                            <i class="fas fa-video"></i>
+                        </button>
+                        <button class="control-btn screen-share-btn" id="screen-share-btn">
+                            <i class="fas fa-desktop"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Remote Video -->
+                <div class="video-box">
+                    <video id="remote-video" class="video-element" autoplay></video>
+                    <div class="video-placeholder" id="remote-placeholder">
+                        <i class="fas fa-user"></i>
+                        <span id="remote-user-name">Lisa Wang</span>
+                    </div>
+                    <div class="video-label" id="remote-user-label">Lisa Wang</div>
+                </div>
+            </div>
+            
+            <!-- Main Controls -->
+            <div class="video-controls" style="position: relative; background: white; border-radius: 8px; padding: 1rem; justify-content: center;">
+                <button class="control-btn" id="main-mute-btn">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="control-btn" id="main-video-btn">
+                    <i class="fas fa-video"></i>
+                </button>
+                <button class="control-btn screen-share-btn" id="main-screen-share-btn">
+                    <i class="fas fa-desktop"></i>
+                </button>
+                <button class="control-btn danger" id="end-call-btn">
+                    <i class="fas fa-phone"></i>
+                </button>
+            </div>
+            
+            <!-- Session Tools -->
+            <div class="session-tools">
+                <div class="tool-card">
+                    <h3><i class="fas fa-sticky-note"></i> Session Notes</h3>
+                    <textarea rows="4" placeholder="Take notes during your session..." style="width: 100%; margin-top: 0.5rem;"></textarea>
+                </div>
+                <div class="tool-card">
+                    <h3><i class="fas fa-link"></i> Share Resources</h3>
+                    <input type="text" placeholder="Paste resource links here..." style="width: 100%; margin-top: 0.5rem;">
+                    <button class="btn btn-primary" style="margin-top: 0.5rem; width: 100%;">Share Link</button>
+                </div>
+                <div class="tool-card">
+                    <h3><i class="fas fa-clock"></i> Session Timer</h3>
+                    <div style="font-size: 1.5rem; text-align: center; margin: 0.5rem 0;" id="session-timer">00:00:00</div>
+                    <button class="btn btn-outline" style="width: 100%;" id="timer-toggle">Start Timer</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feedback Section -->
+        <section id="feedback" class="section">
+            <h2 class="section-title">Session Feedback</h2>
+            <div class="card">
+                <h3>How was your session with <span id="feedback-partner-name">Lisa Wang</span>?</h3>
+                <p>Your feedback helps improve the SkillBarter community and helps your partner improve their teaching.</p>
+                
+                <div class="form-group">
+                    <label>Overall Rating</label>
+                    <div class="rating" id="rating">
+                        <span class="star" data-value="1"><i class="fas fa-star"></i></span>
+                        <span class="star" data-value="2"><i class="fas fa-star"></i></span>
+                        <span class="star" data-value="3"><i class="fas fa-star"></i></span>
+                        <span class="star" data-value="4"><i class="fas fa-star"></i></span>
+                        <span class="star" data-value="5"><i class="fas fa-star"></i></span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="comments">Comments</label>
+                    <textarea id="comments" rows="4" placeholder="What did you like about the session? Any suggestions for improvement?"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="skills-demonstrated">Skills Demonstrated</label>
+                    <div class="skills-container" id="feedback-skills-container">
+                        <!-- Skills will be dynamically added here -->
+                    </div>
+                    <input type="text" id="skills-demonstrated" placeholder="Add new skills demonstrated...">
+                </div>
+                
+                <div class="form-group">
+                    <label>Would you recommend <span id="recommend-partner-name">Lisa</span> to others?</label>
+                    <div style="display: flex; gap: 1rem;">
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" name="recommend" value="yes"> Yes
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" name="recommend" value="no"> No
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" style="width: 100%;" id="submitFeedbackBtn">Submit Feedback</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>SkillBarter</h3>
+                    <p>Exchange skills, grow together, and build a community of lifelong learners.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Browse Skills</a></li>
+                        <li><a href="#">Success Stories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Community Guidelines</a></li>
+                        <li><a href="#">Safety Tips</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                        <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                        <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 SkillBarter. All rights reserved. | Partnered with eSamuday for skill verification</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add Skills Modal -->
+    <div class="modal" id="addSkillsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Skills to Your Profile</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <p>Based on your feedback, we've identified these skills that you might want to add to your profile:</p>
+            <div class="skills-container" id="modal-skills-container" style="margin: 1rem 0;"></div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelAddSkills">Cancel</button>
+                <button class="btn btn-primary" id="confirmAddSkills">Add Skills</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User data for matches
+        const userData = {
+            'sarah': { 
+                name: 'Sarah Johnson', 
+                skills: ['Graphic Design', 'UI/UX'], 
+                learn: ['Web Development'],
+                bio: 'Professional graphic designer with 5 years of experience. I specialize in branding and UI/UX design.',
+                verifiedSkills: ['Photoshop', 'Illustrator']
+            },
+            'michael': { 
+                name: 'Michael Chen', 
+                skills: ['Web Development', 'JavaScript'], 
+                learn: ['Digital Marketing'],
+                bio: 'Full-stack developer passionate about creating responsive web applications. I love teaching programming concepts.',
+                verifiedSkills: ['JavaScript']
+            },
+            'emma': { 
+                name: 'Emma Rodriguez', 
+                skills: ['Digital Marketing', 'SEO'], 
+                learn: ['Photography'],
+                bio: 'Digital marketing specialist with expertise in SEO and social media strategy. Always looking to learn new creative skills.',
+                verifiedSkills: ['SEO']
+            },
+            'lisa': { 
+                name: 'Lisa Wang', 
+                skills: ['Digital Marketing', 'SEO'], 
+                learn: ['Graphic Design'],
+                bio: 'Marketing professional with a focus on data-driven strategies. Excited to learn design principles to enhance my campaigns.',
+                verifiedSkills: ['SEO', 'Social Media']
+            },
+            'david': { 
+                name: 'David Kim', 
+                skills: ['Photography'], 
+                learn: ['UI/UX Design'],
+                bio: 'Professional photographer specializing in portrait and landscape photography. Looking to expand into digital design.',
+                verifiedSkills: ['Portrait']
+            }
+        };
+
+        // Current active partner
+        let currentPartner = null;
+        let chatHistory = [];
+        
+        // Video call state
+        let localStream = null;
+        let isMuted = false;
+        let isVideoOff = false;
+        let isScreenSharing = false;
+        let screenStream = null;
+        let sessionTimer = null;
+        let timerRunning = false;
+        let timerSeconds = 0;
+
+        // User profile data
+        let userProfile = {
+            name: 'John Doe',
+            skills: ['Graphic Design', 'UI/UX', 'JavaScript'],
+            learnSkills: ['Digital Marketing', 'Photography'],
+            points: 850,
+            badgeLevel: 'Expert'
+        };
+
+        // Badge levels with point thresholds
+        const badgeLevels = [
+            { name: 'Beginner', minPoints: 0, maxPoints: 100 },
+            { name: 'Explorer', minPoints: 101, maxPoints: 300 },
+            { name: 'Specialist', minPoints: 301, maxPoints: 600 },
+            { name: 'Expert', minPoints: 601, maxPoints: 1000 },
+            { name: 'Champion', minPoints: 1001, maxPoints: 1500 },
+            { name: 'Innovator', minPoints: 1501, maxPoints: 2500 },
+            { name: 'Grandmaster', minPoints: 2501, maxPoints: Infinity }
+        ];
+
+        // Navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const sectionId = this.getAttribute('data-section');
+                showSection(sectionId);
+            });
+        });
+
+        document.getElementById('getStartedBtn').addEventListener('click', function() {
+            showSection('registration');
+        });
+
+        document.getElementById('signupBtn').addEventListener('click', function() {
+            showSection('registration');
+        });
+
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            // In a real app, this would show a login form
+            // For this demo, we'll just show the dashboard
+            showSection('dashboard');
+        });
+
+        // Show specific section and hide others
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active-section');
+            });
+            document.getElementById(sectionId).classList.add('active-section');
+            
+            // Initialize video call when showing video conference section
+            if (sectionId === 'video-conference') {
+                initializeVideoCall();
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // File upload
+        document.getElementById('resumeUpload').addEventListener('click', function() {
+            document.getElementById('resume').click();
+        });
+
+        document.getElementById('resume').addEventListener('change', function() {
+            if (this.files.length > 0) {
+                const fileName = this.files[0].name;
+                document.getElementById('resumeUpload').innerHTML = `
+                    <i class="fas fa-file-pdf" style="font-size: 2rem; margin-bottom: 1rem; color: var(--danger);"></i>
+                    <p>${fileName}</p>
+                    <p style="font-size: 0.8rem; color: var(--gray);">Click to change file</p>
+                `;
+                
+                // Simulate AI extracting skills from resume
+                setTimeout(() => {
+                    alert("AI has analyzed your resume and added these skills: UI/UX, Adobe Creative Suite");
+                    
+                    // Add skills to the skills container
+                    addSkill('UI/UX', 'skillsContainer');
+                    addSkill('Adobe Creative Suite', 'skillsContainer');
+                }, 1000);
+            }
+        });
+
+        // Skills input
+        document.getElementById('skills').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const skill = this.value.trim();
+                if (skill) {
+                    addSkill(skill, 'skillsContainer');
+                    this.value = '';
+                }
+            }
+        });
+
+        document.getElementById('learnSkills').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const skill = this.value.trim();
+                if (skill) {
+                    addSkill(skill, 'learnSkillsContainer');
+                    this.value = '';
+                }
+            }
+        });
+
+        function addSkill(skill, containerId) {
+            // Remove commas if present
+            skill = skill.replace(/,/g, '');
+            
+            const skillElement = document.createElement('span');
+            skillElement.className = 'skill-tag';
+            skillElement.innerHTML = `${skill} <i class="fas fa-times"></i>`;
+            
+            skillElement.querySelector('i').addEventListener('click', function() {
+                skillElement.remove();
+            });
+            
+            document.getElementById(containerId).appendChild(skillElement);
+        }
+
+        // eSamuday API Integration
+        async function verifySkillsWithESamuday(aadhaarNumber, skills) {
+            // This is a simulation of eSamuday API integration
+            // In a real implementation, you would make an API call to eSamuday
+            
+            try {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Mock response from eSamuday API
+                const mockResponse = {
+                    success: true,
+                    verifiedSkills: skills.filter(skill => 
+                        ['Graphic Design', 'UI/UX', 'JavaScript', 'SEO', 'Social Media', 'Portrait'].includes(skill)
+                    ),
+                    message: 'Skills verified successfully',
+                    certificateId: 'ES' + Date.now()
+                };
+                
+                return mockResponse;
+            } catch (error) {
+                console.error('Error verifying skills with eSamuday:', error);
+                return {
+                    success: false,
+                    verifiedSkills: [],
+                    message: 'Failed to verify skills'
+                };
+            }
+        }
+
+        // Registration form
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const aadhaar = document.getElementById('aadhaar').value;
+            const consent = document.getElementById('consentCheckbox').checked;
+            const skills = Array.from(document.getElementById('skillsContainer').children)
+                .map(el => el.textContent.replace(' ×', '').trim());
+            
+            // Verify skills with eSamuday if consent is given
+            if (consent && aadhaar && aadhaar.length === 12) {
+                try {
+                    const verificationResult = await verifySkillsWithESamuday(aadhaar, skills);
+                    
+                    if (verificationResult.success) {
+                        alert(`Account created successfully! ${verificationResult.verifiedSkills.length} skills verified via eSamuday.`);
+                    } else {
+                        alert('Account created, but skill verification failed. You can verify skills later.');
+                    }
+                } catch (error) {
+                    alert('Account created, but there was an issue with skill verification. You can verify skills later.');
+                }
+            } else {
+                alert('Account created successfully! You can verify your skills later for better matches.');
+            }
+            
+            showSection('dashboard');
+        });
+
+        // Verify skills button
+        document.getElementById('verifySkillsBtn').addEventListener('click', function() {
+            showSection('registration');
+        });
+
+        // Connect buttons - show communication choice
+        document.querySelectorAll('.connect-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const userKey = this.getAttribute('data-user');
+                currentPartner = userData[userKey];
+                
+                // Update partner name in communication choice
+                document.getElementById('partner-name').textContent = currentPartner.name;
+                document.getElementById('chat-partner-name').textContent = currentPartner.name;
+                document.getElementById('video-partner-name').textContent = currentPartner.name;
+                document.getElementById('remote-user-name').textContent = currentPartner.name;
+                document.getElementById('remote-user-label').textContent = currentPartner.name;
+                document.getElementById('feedback-partner-name').textContent = currentPartner.name;
+                document.getElementById('recommend-partner-name').textContent = currentPartner.name.split(' ')[0];
+                
+                // Initialize chat with a welcome message
+                initializeChat();
+                
+                showSection('communication-choice');
+            });
+        });
+
+        // Communication choice handlers
+        document.getElementById('chat-choice').addEventListener('click', function() {
+            showSection('chat');
+        });
+
+        document.getElementById('video-choice').addEventListener('click', function() {
+            showSection('video-conference');
+        });
+
+        // Back to matches button
+        document.getElementById('back-to-matches').addEventListener('click', function() {
+            showSection('dashboard');
+        });
+
+        // Switch to video from chat
+        document.getElementById('switch-to-video').addEventListener('click', function() {
+            showSection('video-conference');
+        });
+
+        // Initialize chat with welcome message
+        function initializeChat() {
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.innerHTML = '';
+            chatHistory = [];
+            
+            // Add welcome message from the partner
+            addMessageToChat(currentPartner.name + ': Hi! I saw your profile and I\'m excited about our skill exchange. What would you like to start with?', 'received');
+            
+            // Add to chat history
+            chatHistory.push({
+                role: 'assistant',
+                content: 'Hi! I saw your profile and I\'m excited about our skill exchange. What would you like to start with?'
+            });
+        }
+
+        // Add message to chat
+        function addMessageToChat(message, type) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${type}`;
+            
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageElement.innerHTML = `
+                ${message}
+                <div class="message-time">${time}</div>
+            `;
+            
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Send message function
+        async function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value.trim();
+            
+            if (message === '') return;
+            
+            // Add user message to chat
+            addMessageToChat('You: ' + message, 'sent');
+            
+            // Add to chat history
+            chatHistory.push({
+                role: 'user',
+                content: message
+            });
+            
+            // Clear input
+            messageInput.value = '';
+            
+            // Show typing indicator
+            const typingIndicator = document.getElementById('typing-indicator');
+            typingIndicator.style.display = 'block';
+            document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+            
+            try {
+                // Generate AI response
+                const aiResponse = await generateAIResponse(message);
+                
+                // Hide typing indicator
+                typingIndicator.style.display = 'none';
+                
+                // Add AI response to chat
+                addMessageToChat(currentPartner.name + ': ' + aiResponse, 'received');
+                
+                // Add to chat history
+                chatHistory.push({
+                    role: 'assistant',
+                    content: aiResponse
+                });
+            } catch (error) {
+                // Hide typing indicator
+                typingIndicator.style.display = 'none';
+                
+                // Fallback response if API fails
+                const fallbackResponses = [
+                    "That's interesting! Tell me more about that.",
+                    "I'd love to help with that. Could you elaborate?",
+                    "Great question! Based on my experience, I'd suggest starting with the basics.",
+                    "I'm excited to exchange skills with you. What specific aspect are you most interested in?",
+                    "That sounds like a good starting point for our skill exchange!"
+                ];
+                
+                const randomResponse = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+                addMessageToChat(currentPartner.name + ': ' + randomResponse, 'received');
+                
+                // Add to chat history
+                chatHistory.push({
+                    role: 'assistant',
+                    content: randomResponse
+                });
+            }
+        }
+
+        // Generate AI response using OpenAI API
+        async function generateAIResponse(userMessage) {
+            // In a real implementation, you would use the OpenAI API here
+            // For this demo, we'll simulate API calls with a timeout
+            
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
+            
+            // Create context for the AI based on the user's profile and skills
+            const context = `
+                You are ${currentPartner.name}, a ${currentPartner.skills.join(' and ')} expert who wants to learn ${currentPartner.learn.join(' and ')}.
+                You are having a conversation on a skill exchange platform. 
+                Your bio: ${currentPartner.bio}
+                Be friendly, helpful, and focus on skill exchange topics.
+                Keep responses conversational and not too long.
+            `;
+            
+            // Simple rule-based responses for demo purposes
+            // In a real implementation, you would call the OpenAI API
+            
+            const userMessageLower = userMessage.toLowerCase();
+            
+            if (userMessageLower.includes('hello') || userMessageLower.includes('hi') || userMessageLower.includes('hey')) {
+                return "Hi there! I'm excited to start our skill exchange. What would you like to know about " + currentPartner.skills[0] + "?";
+            } else if (userMessageLower.includes('teach') || userMessageLower.includes('learn') || userMessageLower.includes('skill')) {
+                return "I'd be happy to teach you about " + currentPartner.skills[0] + ". In exchange, I'm hoping to learn more about " + currentPartner.learn[0] + " from you. Where should we start?";
+            } else if (userMessageLower.includes('schedule') || userMessageLower.includes('time') || userMessageLower.includes('when')) {
+                return "I'm generally available on weekday evenings and weekend afternoons. What works best for you?";
+            } else if (userMessageLower.includes('beginner') || userMessageLower.includes('start') || userMessageLower.includes('basic')) {
+                return "For beginners in " + currentPartner.skills[0] + ", I usually recommend starting with the fundamentals. Would you like me to share some beginner resources?";
+            } else if (userMessageLower.includes('resource') || userMessageLower.includes('tool') || userMessageLower.includes('book')) {
+                return "I have some great resources for learning " + currentPartner.skills[0] + ". I can share them with you during our first session. What about you - do you have any recommended resources for " + currentPartner.learn[0] + "?";
+            } else if (userMessageLower.includes('project') || userMessageLower.includes('practice') || userMessageLower.includes('exercise')) {
+                return "Working on real projects is the best way to learn! I can guide you through a small " + currentPartner.skills[0] + " project. What kind of project interests you?";
+            } else if (userMessageLower.includes('thank') || userMessageLower.includes('thanks')) {
+                return "You're welcome! I'm really looking forward to our skill exchange. I think we can both learn a lot from each other.";
+            } else if (userMessageLower.includes('verify') || userMessageLower.includes('esamuday')) {
+                return "Yes, some of my skills are verified through eSamuday API. It gives learners confidence that I actually know what I'm teaching!";
+            } else {
+                // Generic response for other messages
+                const genericResponses = [
+                    "That's a great point! I'd love to discuss this further in our session.",
+                    "Interesting! I have some experience with that which I'd be happy to share.",
+                    "I'm glad you brought that up. It's an important aspect of " + currentPartner.skills[0] + ".",
+                    "That sounds like a perfect topic for our skill exchange sessions!",
+                    "I'd be happy to help with that. Let's make sure to cover it in our first session."
+                ];
+                return genericResponses[Math.floor(Math.random() * genericResponses.length)];
+            }
+        }
+
+        // Send message when button is clicked
+        document.getElementById('send-message').addEventListener('click', sendMessage);
+
+        // Send message when Enter key is pressed
+        document.getElementById('message-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Initialize video call
+        async function initializeVideoCall() {
+            try {
+                // Access user's camera and microphone
+                localStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: true, 
+                    audio: true 
+                });
+                
+                // Display local video stream
+                const localVideo = document.getElementById('local-video');
+                localVideo.srcObject = localStream;
+                
+                // Hide placeholder
+                document.getElementById('local-placeholder').style.display = 'none';
+                
+                // For demo purposes, we'll simulate a remote user
+                // In a real implementation, you would connect to a remote peer
+                simulateRemoteVideo();
+                
+                // Start session timer
+                startSessionTimer();
+                
+            } catch (error) {
+                console.error('Error accessing media devices:', error);
+                alert('Unable to access your camera and microphone. Please check your permissions.');
+            }
+        }
+
+        // Simulate remote video for demo
+        function simulateRemoteVideo() {
+            // In a real implementation, this would be the remote user's video stream
+            // For demo, we'll use a placeholder
+            const remoteVideo = document.getElementById('remote-video');
+            const remotePlaceholder = document.getElementById('remote-placeholder');
+            
+            // Simulate remote user joining after a delay
+            setTimeout(() => {
+                remotePlaceholder.style.display = 'none';
+                // In a real app, you would set remoteVideo.srcObject to the remote stream
+                // For demo, we'll just show a static image or simulated video
+            }, 2000);
+        }
+
+        // Toggle mute
+        function toggleMute() {
+            if (localStream) {
+                const audioTracks = localStream.getAudioTracks();
+                audioTracks.forEach(track => {
+                    track.enabled = isMuted;
+                });
+                
+                isMuted = !isMuted;
+                
+                // Update button appearance
+                const muteButtons = document.querySelectorAll('#mute-btn, #main-mute-btn');
+                muteButtons.forEach(btn => {
+                    if (isMuted) {
+                        btn.classList.add('active');
+                        btn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                    } else {
+                        btn.classList.remove('active');
+                        btn.innerHTML = '<i class="fas fa-microphone"></i>';
+                    }
+                });
+            }
+        }
+
+        // Toggle video
+        function toggleVideo() {
+            if (localStream) {
+                const videoTracks = localStream.getVideoTracks();
+                videoTracks.forEach(track => {
+                    track.enabled = isVideoOff;
+                });
+                
+                isVideoOff = !isVideoOff;
+                
+                // Update button appearance
+                const videoButtons = document.querySelectorAll('#video-btn, #main-video-btn');
+                videoButtons.forEach(btn => {
+                    if (isVideoOff) {
+                        btn.classList.add('active');
+                        btn.innerHTML = '<i class="fas fa-video-slash"></i>';
+                    } else {
+                        btn.classList.remove('active');
+                        btn.innerHTML = '<i class="fas fa-video"></i>';
+                    }
+                });
+                
+                // Show/hide video placeholder
+                const localPlaceholder = document.getElementById('local-placeholder');
+                if (isVideoOff) {
+                    localPlaceholder.style.display = 'flex';
+                } else {
+                    localPlaceholder.style.display = 'none';
+                }
+            }
+        }
+
+        // Toggle screen sharing
+        async function toggleScreenShare() {
+            if (!isScreenSharing) {
+                try {
+                    screenStream = await navigator.mediaDevices.getDisplayMedia({ 
+                        video: true,
+                        audio: true 
+                    });
+                    
+                    // Replace local video with screen share
+                    const localVideo = document.getElementById('local-video');
+                    localVideo.srcObject = screenStream;
+                    
+                    isScreenSharing = true;
+                    
+                    // Update button appearance
+                    const screenButtons = document.querySelectorAll('#screen-share-btn, #main-screen-share-btn');
+                    screenButtons.forEach(btn => {
+                        btn.classList.add('active');
+                    });
+                    
+                    // Handle when screen sharing is stopped
+                    screenStream.getVideoTracks()[0].onended = function() {
+                        stopScreenShare();
+                    };
+                    
+                } catch (error) {
+                    console.error('Error sharing screen:', error);
+                }
+            } else {
+                stopScreenShare();
+            }
+        }
+
+        // Stop screen sharing
+        function stopScreenShare() {
+            if (screenStream) {
+                screenStream.getTracks().forEach(track => track.stop());
+                screenStream = null;
+            }
+            
+            // Restore local video
+            const localVideo = document.getElementById('local-video');
+            localVideo.srcObject = localStream;
+            
+            isScreenSharing = false;
+            
+            // Update button appearance
+            const screenButtons = document.querySelectorAll('#screen-share-btn, #main-screen-share-btn');
+            screenButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+        }
+
+        // Start session timer
+        function startSessionTimer() {
+            timerRunning = true;
+            sessionTimer = setInterval(() => {
+                timerSeconds++;
+                
+                const hours = Math.floor(timerSeconds / 3600);
+                const minutes = Math.floor((timerSeconds % 3600) / 60);
+                const seconds = timerSeconds % 60;
+                
+                const timerDisplay = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                document.getElementById('session-timer').textContent = timerDisplay;
+            }, 1000);
+        }
+
+        // Toggle timer
+        function toggleTimer() {
+            const timerToggle = document.getElementById('timer-toggle');
+            
+            if (timerRunning) {
+                clearInterval(sessionTimer);
+                timerRunning = false;
+                timerToggle.textContent = 'Resume Timer';
+            } else {
+                startSessionTimer();
+                timerToggle.textContent = 'Pause Timer';
+            }
+        }
+
+        // End call
+        function endCall() {
+            // Stop all tracks
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+            }
+            
+            if (screenStream) {
+                screenStream.getTracks().forEach(track => track.stop());
+            }
+            
+            // Stop timer
+            if (sessionTimer) {
+                clearInterval(sessionTimer);
+            }
+            
+            // Show feedback form
+            showSection('feedback');
+        }
+
+        // Set up video call event listeners
+        document.getElementById('mute-btn').addEventListener('click', toggleMute);
+        document.getElementById('main-mute-btn').addEventListener('click', toggleMute);
+        
+        document.getElementById('video-btn').addEventListener('click', toggleVideo);
+        document.getElementById('main-video-btn').addEventListener('click', toggleVideo);
+        
+        document.getElementById('screen-share-btn').addEventListener('click', toggleScreenShare);
+        document.getElementById('main-screen-share-btn').addEventListener('click', toggleScreenShare);
+        
+        document.getElementById('end-call-btn').addEventListener('click', endCall);
+        
+        document.getElementById('timer-toggle').addEventListener('click', toggleTimer);
+
+        // Rating stars
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function() {
+                const value = parseInt(this.getAttribute('data-value'));
+                document.querySelectorAll('.star').forEach(s => {
+                    if (parseInt(s.getAttribute('data-value')) <= value) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Skills demonstrated input
+        document.getElementById('skills-demonstrated').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const skill = this.value.trim();
+                if (skill) {
+                    addSkillToFeedback(skill);
+                    this.value = '';
+                }
+            }
+        });
+
+        function addSkillToFeedback(skill) {
+            // Remove commas if present
+            skill = skill.replace(/,/g, '');
+            
+            const skillElement = document.createElement('span');
+            skillElement.className = 'skill-tag';
+            skillElement.innerHTML = `${skill} <i class="fas fa-times"></i>`;
+            
+            skillElement.querySelector('i').addEventListener('click', function() {
+                skillElement.remove();
+            });
+            
+            document.getElementById('feedback-skills-container').appendChild(skillElement);
+        }
+
+        // AI-powered feedback analysis
+        function analyzeFeedback(rating, comments, skills, recommend) {
+            // Analyze sentiment from comments
+            const commentLower = comments.toLowerCase();
+            let sentimentScore = 0;
+            
+            // Positive sentiment indicators
+            const positiveWords = ['good', 'great', 'excellent', 'amazing', 'fantastic', 'wonderful', 'helpful', 'knowledgeable', 'patient', 'clear', 'professional'];
+            positiveWords.forEach(word => {
+                if (commentLower.includes(word)) sentimentScore++;
+            });
+            
+            // Negative sentiment indicators
+            const negativeWords = ['bad', 'poor', 'terrible', 'awful', 'unhelpful', 'confusing', 'rushed', 'unprepared', 'boring'];
+            negativeWords.forEach(word => {
+                if (commentLower.includes(word)) sentimentScore--;
+            });
+            
+            // Calculate points based on rating and sentiment
+            let pointsChange = 0;
+            
+            // Base points from rating
+            pointsChange += (rating - 3) * 10; // +20 for 5 stars, +10 for 4 stars, 0 for 3 stars, -10 for 2 stars, -20 for 1 star
+            
+            // Bonus points for positive sentiment
+            if (sentimentScore > 0) pointsChange += 10;
+            
+            // Penalty points for negative sentiment
+            if (sentimentScore < 0) pointsChange -= 10;
+            
+            // Bonus for recommendation
+            if (recommend === 'yes') pointsChange += 15;
+            
+            return {
+                pointsChange,
+                sentiment: sentimentScore > 0 ? 'positive' : sentimentScore < 0 ? 'negative' : 'neutral',
+                skillsToAdd: extractSkillsFromFeedback(comments, skills)
+            };
+        }
+
+        // Extract skills from feedback using AI
+        function extractSkillsFromFeedback(comments, manuallyAddedSkills) {
+            const commentLower = comments.toLowerCase();
+            const allSkills = [...manuallyAddedSkills];
+            
+            // Skill extraction based on keywords
+            const skillKeywords = {
+                'SEO': ['seo', 'search engine optimization'],
+                'Social Media Marketing': ['social media', 'facebook', 'instagram', 'twitter', 'linkedin'],
+                'Content Marketing': ['content marketing', 'blogging', 'content creation'],
+                'Email Marketing': ['email marketing', 'newsletter'],
+                'Analytics': ['analytics', 'data analysis', 'metrics'],
+                'Graphic Design': ['graphic design', 'photoshop', 'illustrator', 'canva'],
+                'Web Development': ['web development', 'html', 'css', 'javascript', 'programming'],
+                'UI/UX Design': ['ui/ux', 'user interface', 'user experience', 'wireframing'],
+                'Photography': ['photography', 'camera', 'photo editing'],
+                'Video Editing': ['video editing', 'premiere pro', 'final cut']
+            };
+            
+            // Check for skill keywords in comments
+            for (const [skill, keywords] of Object.entries(skillKeywords)) {
+                if (keywords.some(keyword => commentLower.includes(keyword)) && !allSkills.includes(skill)) {
+                    allSkills.push(skill);
+                }
+            }
+            
+            return allSkills;
+        }
+
+        // Update user points and badge level
+        function updateUserPoints(pointsChange) {
+            userProfile.points += pointsChange;
+            
+            // Ensure points don't go below 0
+            if (userProfile.points < 0) userProfile.points = 0;
+            
+            // Update badge level based on points
+            const newLevel = badgeLevels.find(level => 
+                userProfile.points >= level.minPoints && userProfile.points <= level.maxPoints
+            );
+            
+            if (newLevel && newLevel.name !== userProfile.badgeLevel) {
+                userProfile.badgeLevel = newLevel.name;
+                alert(`Congratulations! You've reached the ${newLevel.name} level!`);
+            }
+            
+            // Update UI
+            document.querySelector('.points').textContent = `${userProfile.points} Points`;
+            
+            // Update active badge level
+            document.querySelectorAll('.level').forEach(level => {
+                level.classList.remove('active');
+                if (level.querySelector('.level-name').textContent === userProfile.badgeLevel) {
+                    level.classList.add('active');
+                }
+            });
+        }
+
+        // Show modal to add new skills
+        function showAddSkillsModal(skills) {
+            const modal = document.getElementById('addSkillsModal');
+            const skillsContainer = document.getElementById('modal-skills-container');
+            
+            // Clear previous skills
+            skillsContainer.innerHTML = '';
+            
+            // Add skills to modal
+            skills.forEach(skill => {
+                const skillElement = document.createElement('span');
+                skillElement.className = 'skill-tag';
+                skillElement.textContent = skill;
+                skillsContainer.appendChild(skillElement);
+            });
+            
+            // Show modal
+            modal.style.display = 'flex';
+        }
+
+        // Submit feedback
+        document.getElementById('submitFeedbackBtn').addEventListener('click', function() {
+            // Get rating
+            const activeStars = document.querySelectorAll('.star.active');
+            const rating = activeStars.length;
+            
+            if (rating === 0) {
+                alert('Please provide a rating before submitting feedback.');
+                return;
+            }
+            
+            // Get comments
+            const comments = document.getElementById('comments').value;
+            
+            // Get skills demonstrated
+            const skills = Array.from(document.getElementById('feedback-skills-container').children)
+                .map(el => el.textContent.replace(' ×', '').trim());
+            
+            // Get recommendation
+            const recommend = document.querySelector('input[name="recommend"]:checked');
+            const recommendValue = recommend ? recommend.value : null;
+            
+            if (!recommendValue) {
+                alert('Please indicate whether you would recommend this partner to others.');
+                return;
+            }
+            
+            // Analyze feedback using AI
+            const analysis = analyzeFeedback(rating, comments, skills, recommendValue);
+            
+            // Update user points
+            updateUserPoints(analysis.pointsChange);
+            
+            // Show feedback summary
+            let message = `Thank you for your feedback! `;
+            
+            if (analysis.pointsChange > 0) {
+                message += `You earned ${analysis.pointsChange} points. `;
+            } else if (analysis.pointsChange < 0) {
+                message += `You lost ${Math.abs(analysis.pointsChange)} points. `;
+            }
+            
+            // Check if there are new skills to add
+            const newSkills = analysis.skillsToAdd.filter(skill => 
+                !userProfile.skills.includes(skill) && !userProfile.learnSkills.includes(skill)
+            );
+            
+            if (newSkills.length > 0) {
+                message += `We've identified ${newSkills.length} new skills from your feedback. `;
+                showAddSkillsModal(newSkills);
+            } else {
+                alert(message);
+                showSection('dashboard');
+            }
+        });
+
+        // Add skills modal handlers
+        document.querySelector('.close-modal').addEventListener('click', function() {
+            document.getElementById('addSkillsModal').style.display = 'none';
+            showSection('dashboard');
+        });
+
+        document.getElementById('cancelAddSkills').addEventListener('click', function() {
+            document.getElementById('addSkillsModal').style.display = 'none';
+            showSection('dashboard');
+        });
+
+        document.getElementById('confirmAddSkills').addEventListener('click', function() {
+            const skillsToAdd = Array.from(document.getElementById('modal-skills-container').children)
+                .map(el => el.textContent.trim());
+            
+            // Add skills to user profile
+            userProfile.skills = [...userProfile.skills, ...skillsToAdd];
+            
+            // Update UI (in a real app, this would update the backend)
+            alert(`Added ${skillsToAdd.length} new skills to your profile!`);
+            
+            document.getElementById('addSkillsModal').style.display = 'none';
+            showSection('dashboard');
+        });
+
+        // Initialize with some skills
+        window.onload = function() {
+            addSkill('Graphic Design', 'skillsContainer');
+            addSkill('JavaScript', 'skillsContainer');
+            addSkill('Digital Marketing', 'learnSkillsContainer');
+        };
+    </script>
+</body>
+</html>

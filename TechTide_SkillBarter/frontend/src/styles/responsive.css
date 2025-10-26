@@ -1,0 +1,328 @@
+/* Responsive design utilities and overrides */
+
+/* Extra small devices (phones, 480px and down) */
+@media (max-width: 480px) {
+  .container-xs {
+    @apply px-4;
+  }
+  
+  .text-xs-responsive {
+    font-size: 0.875rem;
+  }
+  
+  .btn-xs-full {
+    @apply w-full justify-center;
+  }
+  
+  .hide-xs {
+    display: none !important;
+  }
+  
+  .stack-xs {
+    @apply flex-col space-y-3;
+  }
+  
+  .grid-xs-1 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Small devices (phones, 640px and down) */
+@media (max-width: 640px) {
+  .container-sm {
+    @apply px-4;
+  }
+  
+  .text-sm-responsive {
+    font-size: 0.875rem;
+  }
+  
+  .card-sm-padding {
+    @apply p-4;
+  }
+  
+  .hide-sm {
+    display: none !important;
+  }
+  
+  .stack-sm {
+    @apply flex-col space-y-4;
+  }
+  
+  .grid-sm-1 {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Mobile navigation */
+  .mobile-nav-open {
+    transform: translateX(0);
+  }
+  
+  .mobile-nav-closed {
+    transform: translateX(-100%);
+  }
+  
+  /* Mobile menu overlay */
+  .mobile-menu-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50 z-40;
+  }
+}
+
+/* Medium devices (tablets, 768px and down) */
+@media (max-width: 768px) {
+  .container-md {
+    @apply px-6;
+  }
+  
+  .text-md-responsive {
+    font-size: 0.9rem;
+  }
+  
+  .hide-md {
+    display: none !important;
+  }
+  
+  .stack-md {
+    @apply flex-col space-y-4;
+  }
+  
+  .grid-md-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Tablet specific adjustments */
+  .tablet-sidebar-collapsed {
+    width: 60px;
+  }
+  
+  .tablet-main-expanded {
+    margin-left: 60px;
+  }
+}
+
+/* Large devices (desktops, 1024px and down) */
+@media (max-width: 1024px) {
+  .container-lg {
+    @apply px-8;
+  }
+  
+  .hide-lg {
+    display: none !important;
+  }
+  
+  .grid-lg-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Extra large devices (large desktops, 1280px and down) */
+@media (max-width: 1280px) {
+  .container-xl {
+    @apply px-12;
+  }
+  
+  .hide-xl {
+    display: none !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-break-before {
+    page-break-before: always;
+  }
+  
+  .print-break-after {
+    page-break-after: always;
+  }
+  
+  .print-break-inside-avoid {
+    page-break-inside: avoid;
+  }
+  
+  .print-full-width {
+    width: 100% !important;
+  }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .retina-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Touch device detection */
+@media (hover: none) and (pointer: coarse) {
+  .touch-device *:focus {
+    outline: none;
+  }
+  
+  .touch-device .hover-effect {
+    opacity: 1;
+  }
+  
+  /* Larger touch targets */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  /* Base dark mode styles */
+  .dark-mode {
+    @apply bg-gray-900 text-gray-100;
+  }
+  
+  .dark-mode .card {
+    @apply bg-gray-800 border-gray-700;
+  }
+  
+  .dark-mode .form-input {
+    @apply bg-gray-800 border-gray-700 text-white;
+  }
+  
+  .dark-mode .btn-outline {
+    @apply border-gray-600 text-gray-300 hover:bg-gray-700;
+  }
+}
+
+/* Orientation specific styles */
+@media (orientation: portrait) {
+  .portrait-full-height {
+    height: 100vh;
+    height: 100dvh;
+  }
+}
+
+@media (orientation: landscape) {
+  .landscape-full-height {
+    height: 100vh;
+    height: 100dvh;
+  }
+}
+
+/* Specific device adjustments */
+/* iPhone notch support */
+@supports (padding: max(0px)) {
+  .safe-area-inset-top {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+  
+  .safe-area-inset-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  
+  .safe-area-inset-left {
+    padding-left: max(1rem, env(safe-area-inset-left));
+  }
+  
+  .safe-area-inset-right {
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+}
+
+/* Foldable devices */
+@media (spanning: single-fold-vertical) {
+  .foldable-sidebar {
+    width: env(fold-left, 0px);
+  }
+  
+  .foldable-main {
+    margin-left: env(fold-width, 0px);
+  }
+}
+
+/* Performance optimizations for low-end devices */
+@media (max-width: 640px) and (prefers-reduced-data: reduce) {
+  .low-data-mode {
+    background-image: none !important;
+  }
+  
+  .low-data-mode * {
+    animation: none !important;
+  }
+}
+
+/* Zoom prevention for form elements */
+@media (max-width: 480px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Very small height devices */
+@media (max-height: 600px) {
+  .short-screen-compact {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .short-screen-hide-secondary {
+    display: none;
+  }
+}
+
+/* Ultra-wide screens */
+@media (min-width: 1920px) {
+  .ultrawide-container {
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .ultrawide-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+/* CSS Container Queries (future) */
+@container (max-width: 480px) {
+  .card-container {
+    padding: 1rem;
+  }
+  
+  .card-title-container {
+    font-size: 1.125rem;
+  }
+}
+
+/* Reduced transparency */
+@media (prefers-reduced-transparency: reduce) {
+  .glass-effect {
+    background: inherit;
+    backdrop-filter: none;
+  }
+}
+
+/* Forced colors mode (Windows High Contrast) */
+@media (forced-colors: active) {
+  .forced-colors-border {
+    border: 1px solid currentColor;
+  }
+  
+  .forced-colors-button {
+    forced-color-adjust: none;
+    background: ButtonFace;
+    color: ButtonText;
+    border: 1px solid ButtonText;
+  }
+}
